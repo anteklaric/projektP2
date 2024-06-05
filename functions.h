@@ -8,6 +8,8 @@ typedef struct igrac {										//2,3
 	char pozicija[15];
 	int brIgDresa;
 	int brNastupa;
+	int brGolova;
+	int brAsis;
 }IGRAC;
 
 int izbornik();
@@ -23,14 +25,22 @@ void* TraziPrezime(IGRAC*);
 void* TraziPozicija(IGRAC*);
 void* TraziBrDresa(IGRAC*);
 void* TraziBrNastupa(IGRAC*);
+void* TraziBrGolova(IGRAC*);
+void* TraziBrAsistencija(IGRAC*);
 void zamjena(IGRAC*, IGRAC*);
 void zamjena2(IGRAC*, IGRAC*);
 void sortImeUzlazno(IGRAC*);
 void sortImeSilazno(IGRAC*);
-void sortPrezimeUzlazno(IGRAC* polje);
-void sortPrezimeSilazno(IGRAC* polje);
+void sortPrezimeUzlazno(IGRAC*);
+void sortPrezimeSilazno(IGRAC*);
 void sortBrDresaUzlazno(IGRAC*);
 void sortBrDresaSilazno(IGRAC*);
+void sortBrNastupaUzlazno(IGRAC*);
+void sortBrNastupaSilazno(IGRAC*);
+void sortBrGolovaUzlazno(IGRAC*);
+void sortBrGolovaSilazno(IGRAC*);
+void sortBrAsistencijaUzlazno(IGRAC*);
+void sortBrAsistencijaSilazno(IGRAC*);
 void brisanjeIgraca(IGRAC*);
 void brisanjeBaze(IGRAC*);
 
