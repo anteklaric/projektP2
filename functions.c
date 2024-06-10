@@ -18,17 +18,17 @@
 #define OPCIJA12 12
 #define OPCIJA13 13
 
-
-extern int brojIgraca = 0;
-static int i, j, br = 0;
+//8 
+extern int brojIgraca = 0; //7
+static int i, j, br = 0; //5
 
 
 
 int izbornik() {
 
 	int opcija = 0;              //1
-	static IGRAC* polje = NULL;             //5,12
-	int provjeraOpcije = 0;
+	static IGRAC* polje = NULL;             //5
+	int provjeraOpcije = 0; //4
 
 	printf("Postovani, nalazite se u bazi podataka nogometnog kluba. \nOvdje uz pomoc odredenih opcija mozete pohraniti igrace i osnovne podatke o njima uz par opcija,\nkao naprimjer dodavanje, uredivanje, trazenje itd.\n");
 	printf("Pod svakim brojem nalazi se opcija\n"); //8
@@ -48,7 +48,7 @@ int izbornik() {
 			printf("Unijeli ste pogresan znak, molimo unesite broj!\n");
 			while (getchar() != '\n');
 		}
-	} while (provjeraOpcije != 1);
+	} while (provjeraOpcije != 1); //12
 
 
 	system("cls");
@@ -66,7 +66,7 @@ int izbornik() {
 		break;
 	case 3:
 		if (polje != NULL) {
-			free(polje);        //15
+			free(polje);        //16
 			polje = NULL;
 		}
 		polje = (IGRAC*)ucitavanjeIgraca();
@@ -100,9 +100,9 @@ int izbornik() {
 
 
 
-izbornikTrazenje() {                    //21
+izbornikTrazenje() {                    //21,9
 	int opcija = 0;
-	IGRAC* polje = NULL;                //9
+	IGRAC* polje = NULL;                
 
 	int provjeraOpcije1 = 0;
 
@@ -157,7 +157,7 @@ izbornikTrazenje() {                    //21
 	}
 	return opcija;
 }
-int izbornikSortiranje() {              //20
+int izbornikSortiranje() {              //21,9
 	int opcija = 0;
 	IGRAC* polje = NULL;
 	polje = (IGRAC*)ucitavanjeIgraca();
@@ -240,7 +240,7 @@ void kreiranjeDat() {
 	FILE* fp = NULL;            //10
 	fp = fopen("igraci.bin", "wb");
 	if (fp == NULL) {
-		perror("Kreiranje");            //19
+		perror("Kreiranje");            //20
 	}
 	fwrite(&brojIgraca, sizeof(int), 1, fp);
 	fclose(fp);
@@ -289,7 +289,7 @@ void azuriranje() {
 	int reload;
 	int brojIgraca;
 
-	fp = fopen("igraci.bin", "rb+");
+	fp = fopen("igraci.bin", "rb+"); //17
 	if (fp == NULL) {
 		printf("Nije unesen ni jedan igrac.\n");
 		return;
@@ -360,7 +360,7 @@ void* ucitavanjeIgraca() {
 	}
 
 	fread(&brojIgraca, sizeof(int), 1, fp);
-	IGRAC* polje = (IGRAC*)calloc(brojIgraca, sizeof(IGRAC));       //13
+	IGRAC* polje = (IGRAC*)calloc(brojIgraca, sizeof(IGRAC));       //15
 
 	if (polje == NULL) {
 		perror("Zauzimanje memorije");
@@ -368,7 +368,7 @@ void* ucitavanjeIgraca() {
 		return NULL;
 	}
 
-	fread(polje, sizeof(IGRAC), brojIgraca, fp);
+	fread(polje, sizeof(IGRAC), brojIgraca, fp); //18
 	fclose(fp);
 	return polje;
 }
@@ -379,8 +379,8 @@ void ispisivanje(IGRAC* polje) {
 	}
 }
 
-void* TraziIme(IGRAC* polje) {
-	char trazenoIme[30];
+void* TraziIme(IGRAC* polje) { //24,22
+	char trazenoIme[30]; //13
 	int br = 0;
 
 	printf("Upisite ime trazenog igraca:\n");
@@ -417,7 +417,7 @@ void* TraziPrezime(IGRAC* polje) {
 	return NULL;
 }
 
-void* TraziPozicija(IGRAC* polje) {         //10
+void* TraziPozicija(IGRAC* polje) {         //10,11
 	char trazenaPoz[15];
 	int br = 0;
 
@@ -432,7 +432,7 @@ void* TraziPozicija(IGRAC* polje) {         //10
 		}
 	}
 	if (br == 0)
-		printf("\nNije unesen niti jedan igrac na ovoj poziciji.\n");  //11
+		printf("\nNije unesen niti jedan igrac na ovoj poziciji.\n");  
 	return NULL;
 }
 
@@ -449,7 +449,7 @@ void* TraziBrDresa(IGRAC* polje) {
 		}
 	}
 	if (br == 0)
-		printf("\nTrazeni broj dresa nije pronadjen.\n");       //11
+		printf("\nTrazeni broj dresa nije pronadjen.\n");     
 	return NULL;
 }
 
@@ -483,7 +483,7 @@ void* TraziBrGolova(IGRAC* polje) {
 		}
 	}
 	if (br == 0)
-		printf("\nIgrac s trazenim brojem nastupa nije pronadjen.\n");
+		printf("\nIgrac s trazenim brojem golova nije pronadjen.\n");
 	return NULL;
 }
 
@@ -500,7 +500,7 @@ void* TraziBrAsistencija(IGRAC* polje) {
 		}
 	}
 	if (br == 0)
-		printf("\nIgrac s trazenim brojem nastupna nije pronadjen.\n");
+		printf("\nIgrac s trazenim brojem asistencija nije pronadjen.\n");
 	return NULL;
 }
 
@@ -671,7 +671,7 @@ void sortBrAsistencijaUzlazno(IGRAC* polje) {
 	printf("\n");
 }
 
-void sortBrAsistencijaSilazno(IGRAC* polje) {
+void sortBrAsistencijaSilazno(IGRAC* polje) { //23,21
 	for (int j = 0; j < brojIgraca; j++) {
 		for (int i = 0; i < brojIgraca - 1; i++) {
 			if (polje[i].brAsis < polje[i + 1].brAsis) {
@@ -687,12 +687,12 @@ void sortBrAsistencijaSilazno(IGRAC* polje) {
 
 void brisanjeIgraca(IGRAC* polje) {
 	FILE* fp = NULL;
-	fp = fopen("igraci.bin", "wb");         //16
+	fp = fopen("igraci.bin", "wb");         //17
 	if (fp == NULL) {
 		perror("Brisanje igraca");
 	}
 	rewind(fp);
-	fseek(fp, sizeof(int), SEEK_CUR);       //17
+	fseek(fp, sizeof(int), SEEK_CUR);       //18
 
 	int br = 0, trazeniIgrac;
 
@@ -717,9 +717,9 @@ void brisanjeBaze(IGRAC* polje) {
 	char uvjet[3] = { '\0' };
 	scanf("%2s", uvjet);
 	if (!strcmp("da", uvjet)) {
-		remove("igraci.bin") == 0 ? printf("Izbrisali ste datoteku igraci.bin.\n") : printf("Datoteka neuspjesno izbrisani ili ona ne postoji.\n");
+		remove("igraci.bin") == 0 ? printf("Izbrisali ste datoteku igraci.bin.\n") : printf("Datoteka neuspjesno izbrisani ili ona ne postoji.\n"); //19
 		printf("\nIzlaz iz programa.\n");
-		free(polje);    //14,15
+		free(polje);    //16
 	}
 	else printf("\nZadrzali ste datoteku.\nIzlaz iz programa\n");
 }
