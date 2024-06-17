@@ -18,7 +18,7 @@
 #define OPCIJA12 12
 #define OPCIJA13 13
 
-//8 
+//8,6 
 extern int brojIgraca = 0; //7
 static int i, j, br = 0; //5
 
@@ -30,8 +30,13 @@ int izbornik() {
 	static IGRAC* polje = NULL;             //5
 	int provjeraOpcije = 0; //4
 
-	printf("Postovani, nalazite se u bazi podataka nogometnog kluba. \nOvdje uz pomoc odredenih opcija mozete pohraniti igrace i osnovne podatke o njima uz par opcija,\nkao naprimjer dodavanje, uredivanje, trazenje itd.\n");
-	printf("Pod svakim brojem nalazi se opcija\n"); //8
+	printf("===========================================================\n");
+	printf("===========================================================\n");
+	printf("|              BAZA PODATAKA NOGOMETNOG KLUBA             |\n");
+	printf("| Pod svakim brojem nalazi se opcija za odredjenu radnju: |\n"); //8
+	printf("===========================================================\n");
+	printf("===========================================================\n");
+	printf("\n");
 	printf("%d Dodavanje igraca\n", OPCIJA1);
 	printf("%d Uredivanje (postojeceg) igraca\n", OPCIJA2);
 	printf("%d Ispisivanje igraca\n", OPCIJA3);
@@ -100,9 +105,9 @@ int izbornik() {
 
 
 
-izbornikTrazenje() {                    //21,9
+izbornikTrazenje() {                    //22,9
 	int opcija = 0;
-	IGRAC* polje = NULL;                
+	IGRAC* polje = NULL;
 
 	int provjeraOpcije1 = 0;
 
@@ -245,7 +250,7 @@ void kreiranjeDat() {
 	fwrite(&brojIgraca, sizeof(int), 1, fp);
 	fclose(fp);
 }
-
+/*
 void dodavanjeIgraca() {
 	FILE* fp = NULL;
 	fp = fopen("igraci.bin", "rb+");
@@ -270,12 +275,96 @@ void dodavanjeIgraca() {
 	getchar();
 	printf("\nUnesite broj dresa igraca: ");
 	scanf("%d", &igraci.brIgDresa);
+	getchar();
 	printf("\nUnesite broj nastupa igraca: ");
 	scanf("%d", &igraci.brNastupa);
+	getchar();
 	printf("\nUnesite broj golova igraca: ");
 	scanf("%d", &igraci.brGolova);
+	getchar();
 	printf("\nUnesite broj asistencija igraca: ");
 	scanf("%d", &igraci.brAsis);
+	getchar();
+	fseek(fp, sizeof(IGRAC) * brojIgraca, SEEK_CUR);
+	fwrite(&igraci, sizeof(IGRAC), 1, fp);
+	rewind(fp);
+	brojIgraca++;
+	fwrite(&brojIgraca, sizeof(int), 1, fp);
+	fclose(fp);
+}
+*/
+
+void dodavanjeIgraca() {
+	FILE* fp = fopen("igraci.bin", "rb+");
+	if (fp == NULL) {
+		perror("Dodavanje");
+		return;
+	}
+
+	fread(&brojIgraca, sizeof(int), 1, fp);
+	printf("Trenutni broj igraca: %d", brojIgraca);
+
+	IGRAC igraci;
+	igraci.id = brojIgraca;
+
+	char buffer[100];
+	getchar();
+
+	
+	printf("\nUnesite ime igraca: ");
+	fgets(igraci.ime, sizeof(igraci.ime), stdin);
+	igraci.ime[strcspn(igraci.ime, "\n")] = 0;
+
+	
+	printf("\nUnesite prezime igraca: ");
+	fgets(igraci.prezime, sizeof(igraci.prezime), stdin);
+	igraci.prezime[strcspn(igraci.prezime, "\n")] = 0;
+
+	
+	printf("\nUnesite poziciju igraca: ");
+	fgets(igraci.pozicija, sizeof(igraci.pozicija), stdin);
+	igraci.pozicija[strcspn(igraci.pozicija, "\n")] = 0;
+
+	
+	while (1) {
+		printf("\nUnesite broj dresa igraca: ");
+		fgets(buffer, sizeof(buffer), stdin);
+		if (sscanf(buffer, "%d", &igraci.brIgDresa) == 1)
+			break;
+		else
+			printf("Neispravan unos, molimo unesite broj.\n");
+	}
+
+	
+	while (1) {
+		printf("\nUnesite broj nastupa igraca: ");
+		fgets(buffer, sizeof(buffer), stdin);
+		if (sscanf(buffer, "%d", &igraci.brNastupa) == 1)
+			break;
+		else
+			printf("Neispravan unos, molimo unesite broj.\n");
+	}
+
+	
+	while (1) {
+		printf("\nUnesite broj golova igraca: ");
+		fgets(buffer, sizeof(buffer), stdin);
+		if (sscanf(buffer, "%d", &igraci.brGolova) == 1)
+			break;
+		else
+			printf("Neispravan unos, molimo unesite broj.\n");
+	}
+
+	
+	while (1) {
+		printf("\nUnesite broj asistencija igraca: ");
+		fgets(buffer, sizeof(buffer), stdin);
+		if (sscanf(buffer, "%d", &igraci.brAsis) == 1)
+			break;
+		else
+			printf("Neispravan unos, molimo unesite broj.\n");
+	}
+
 	fseek(fp, sizeof(IGRAC) * brojIgraca, SEEK_CUR);
 	fwrite(&igraci, sizeof(IGRAC), 1, fp);
 	rewind(fp);
@@ -284,6 +373,7 @@ void dodavanjeIgraca() {
 	fclose(fp);
 }
 
+/*
 void azuriranje() {
 	FILE* fp = NULL;
 	int reload;
@@ -349,7 +439,94 @@ void azuriranje() {
 
 	fclose(fp);
 }
+*/
+void azuriranje() {
+	FILE* fp = NULL;
+	int reload;
+	int brojIgraca;
+	char buffer[100];
 
+	fp = fopen("igraci.bin", "rb+");
+	if (fp == NULL) {
+		printf("Nije unesen ni jedan igrac.\n");
+		return;
+	}
+
+	fread(&brojIgraca, sizeof(int), 1, fp);
+
+	printf("Unesite ID igraca kojeg zelite ispraviti:\n");
+	while (1) {
+		fgets(buffer, sizeof(buffer), stdin);
+		if (sscanf(buffer, "%d", &reload) == 1 && reload >= 0 && reload < brojIgraca)
+			break;
+		else
+			printf("Neispravan unos, molimo unesite valjani ID igraca:\n");
+	}
+
+	fseek(fp, sizeof(int) + sizeof(IGRAC) * reload, SEEK_SET);
+
+	IGRAC ispravljenIgrac;
+	ispravljenIgrac.id = reload;
+
+	
+	printf("Unesite ispravljeno ime igraca: ");
+	fgets(ispravljenIgrac.ime, sizeof(ispravljenIgrac.ime), stdin);
+	ispravljenIgrac.ime[strcspn(ispravljenIgrac.ime, "\n")] = 0;
+
+	
+	printf("Unesite ispravljeno prezime igraca: ");
+	fgets(ispravljenIgrac.prezime, sizeof(ispravljenIgrac.prezime), stdin);
+	ispravljenIgrac.prezime[strcspn(ispravljenIgrac.prezime, "\n")] = 0;
+
+	
+	printf("Unesite ispravljenu poziciju igraca: ");
+	fgets(ispravljenIgrac.pozicija, sizeof(ispravljenIgrac.pozicija), stdin);
+	ispravljenIgrac.pozicija[strcspn(ispravljenIgrac.pozicija, "\n")] = 0;
+
+	
+	while (1) {
+		printf("Unesite ispravljen broj dresa igraca: ");
+		fgets(buffer, sizeof(buffer), stdin);
+		if (sscanf(buffer, "%d", &ispravljenIgrac.brIgDresa) == 1)
+			break;
+		else
+			printf("Neispravan unos, molimo unesite broj.\n");
+	}
+
+	
+	while (1) {
+		printf("Unesite ispravljen broj nastupa igraca: ");
+		fgets(buffer, sizeof(buffer), stdin);
+		if (sscanf(buffer, "%d", &ispravljenIgrac.brNastupa) == 1)
+			break;
+		else
+			printf("Neispravan unos, molimo unesite broj.\n");
+	}
+
+	
+	while (1) {
+		printf("Unesite ispravljen broj golova igraca: ");
+		fgets(buffer, sizeof(buffer), stdin);
+		if (sscanf(buffer, "%d", &ispravljenIgrac.brGolova) == 1)
+			break;
+		else
+			printf("Neispravan unos, molimo unesite broj.\n");
+	}
+
+	
+	while (1) {
+		printf("Unesite ispravljen broj asistencija igraca: ");
+		fgets(buffer, sizeof(buffer), stdin);
+		if (sscanf(buffer, "%d", &ispravljenIgrac.brAsis) == 1)
+			break;
+		else
+			printf("Neispravan unos, molimo unesite broj.\n");
+	}
+
+	fwrite(&ispravljenIgrac, sizeof(IGRAC), 1, fp);
+
+	fclose(fp);
+}
 
 
 void* ucitavanjeIgraca() {
@@ -360,7 +537,7 @@ void* ucitavanjeIgraca() {
 	}
 
 	fread(&brojIgraca, sizeof(int), 1, fp);
-	IGRAC* polje = (IGRAC*)calloc(brojIgraca, sizeof(IGRAC));       //15
+	IGRAC* polje = (IGRAC*)calloc(brojIgraca, sizeof(IGRAC));       //15,14
 
 	if (polje == NULL) {
 		perror("Zauzimanje memorije");
@@ -432,7 +609,7 @@ void* TraziPozicija(IGRAC* polje) {         //10,11
 		}
 	}
 	if (br == 0)
-		printf("\nNije unesen niti jedan igrac na ovoj poziciji.\n");  
+		printf("\nNije unesen niti jedan igrac na ovoj poziciji.\n");
 	return NULL;
 }
 
@@ -449,7 +626,7 @@ void* TraziBrDresa(IGRAC* polje) {
 		}
 	}
 	if (br == 0)
-		printf("\nTrazeni broj dresa nije pronadjen.\n");     
+		printf("\nTrazeni broj dresa nije pronadjen.\n");
 	return NULL;
 }
 
@@ -504,7 +681,7 @@ void* TraziBrAsistencija(IGRAC* polje) {
 	return NULL;
 }
 
-void zamjena(IGRAC* veci, IGRAC* manji) {
+void zamjena(IGRAC* veci, IGRAC* manji) { //23
 	IGRAC temp = { 0 };
 	temp = *veci;
 	*veci = *manji;
